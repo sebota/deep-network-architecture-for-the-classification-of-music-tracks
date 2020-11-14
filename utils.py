@@ -183,7 +183,8 @@ def prepare_data_seq_train():
     y_train, y_test, y_val, y_train_med, y_test_med, y_val_med = encode(y_train, y_test, y_val, y_train_med, y_test_med,
                                                                         y_val_med)
 
-    return x_train_med, y_train_med, x_test_med, y_test_med, x_val_med, y_val_med
+    # return x_train_med, y_train_med, x_test_med, y_test_med, x_val_med, y_val_med
+    return x_train, y_train, x_test, y_test, x_val, y_val
 
 
 def prepare_data_cnn_train():
@@ -191,8 +192,10 @@ def prepare_data_cnn_train():
     y_train, y_test, y_val, y_train_med, y_test_med, y_val_med = encode(y_train, y_test, y_val, y_train_med, y_test_med,
                                                                         y_val_med)
     x_train_med, y_train_med, x_test_med, y_test_med, x_val_med, y_val_med = cnn_dim(x_train_med, y_train_med, x_test_med, y_test_med, x_val_med, y_val_med)
+    x_train, y_train, x_test, y_test, x_val, y_val = cnn_dim(x_train, y_train, x_test, y_test, x_val, y_val)
 
-    return x_train_med, y_train_med, x_test_med, y_test_med, x_val_med, y_val_med
+    # return x_train_med, y_train_med, x_test_med, y_test_med, x_val_med, y_val_med
+    return x_train, y_train, x_test, y_test, x_val, y_val
 
 
 def prepare_data_cnn():
@@ -200,8 +203,10 @@ def prepare_data_cnn():
     y_train, y_test, y_val, y_train_med, y_test_med, y_val_med = encode(y_train, y_test, y_val, y_train_med, y_test_med,
                                                                         y_val_med)
     x_train_med, y_train_med, x_test_med, y_test_med, x_val_med, y_val_med = cnn_dim(x_train_med, y_train_med, x_test_med, y_test_med, x_val_med, y_val_med)
+    x_train, y_train, x_test, y_test, x_val, y_val = cnn_dim(x_train, y_train, x_test, y_test, x_val, y_val)
 
-    return x_test_med, y_test_med
+    # return x_test_med, y_test_med
+    return x_test, y_test
 
 
 def prepare_data_seq():
@@ -209,4 +214,5 @@ def prepare_data_seq():
     y_train, y_test, y_val, y_train_med, y_test_med, y_val_med = encode(y_train, y_test, y_val, y_train_med, y_test_med,
                                                                         y_val_med)
 
-    return x_test_med, y_test_med
+    # return x_test_med, y_test_med
+    return x_test, y_test

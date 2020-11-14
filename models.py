@@ -27,7 +27,7 @@ def model_seq(x_train_med, y_train_med, x_test_med, y_test_med, x_val_med, y_val
                   loss='sparse_categorical_crossentropy',
                   metrics=['accuracy'])
 
-    history = model.fit(x_train_med, y_train_med, epochs=30, validation_data=(x_val_med, y_val_med))
+    history = model.fit(x_train_med, y_train_med, epochs=20, validation_data=(x_val_med, y_val_med))
     # batch_size = 128
 
     print(model.evaluate(x_test_med, y_test_med, verbose=2))
@@ -55,7 +55,7 @@ def model_seq_2(x_train_med, y_train_med, x_test_med, y_test_med, x_val_med, y_v
                   loss='sparse_categorical_crossentropy',
                   metrics=['accuracy'])
 
-    history = model.fit(x_train_med, y_train_med, epochs=30, validation_data=(x_val_med, y_val_med))
+    history = model.fit(x_train_med, y_train_med, epochs=20, validation_data=(x_val_med, y_val_med))
 
     print(model.evaluate(x_test_med, y_test_med, verbose=2))
     print(model.evaluate(x_val_med, y_val_med, verbose=2))
@@ -85,13 +85,42 @@ def model_lstm(x_train_med, y_train_med, x_test_med, y_test_med, x_val_med, y_va
                   loss='sparse_categorical_crossentropy',
                   metrics=['accuracy'])
 
-    history = model.fit(x_train_med, y_train_med, epochs=30, validation_data=(x_val_med, y_val_med))
+    history = model.fit(x_train_med, y_train_med, epochs=20, validation_data=(x_val_med, y_val_med))
 
     print(model.evaluate(x_test_med, y_test_med, verbose=2))
     print(model.evaluate(x_val_med, y_val_med, verbose=2))
 
     plot(history)
     model.save('model_lstm.h5')
+
+
+def model_gru(x_train_med, y_train_med, x_test_med, y_test_med, x_val_med, y_val_med):
+    model = tf.keras.models.Sequential([
+        tf.keras.layers.GRU(128, kernel_regularizer=regularizers.l2(0.0001), activation='tanh',
+                            recurrent_activation='sigmoid', recurrent_dropout=0.0, unroll=False, use_bias=True,
+                            input_shape=(273, 1), return_sequences=True),
+        tf.keras.layers.Dropout(0.6),
+        # tf.keras.layers.LSTM(128, activation='tanh', recurrent_activation='sigmoid', recurrent_dropout=0.0, unroll=False, use_bias=True),
+        # tf.keras.layers.Dropout(0.2),
+        tf.keras.layers.Dense(64, kernel_regularizer=regularizers.l2(0.0001), activation='relu'),
+        tf.keras.layers.Dropout(0.6),
+        tf.keras.layers.Flatten(),
+        tf.keras.layers.Dense(16, activation='softmax')
+    ])
+
+    # adam = tf.keras.optimizers.Adam(lr=0.0005)
+
+    model.compile(optimizer='adam',
+                  loss='sparse_categorical_crossentropy',
+                  metrics=['accuracy'])
+
+    history = model.fit(x_train_med, y_train_med, epochs=20, validation_data=(x_val_med, y_val_med))
+
+    print(model.evaluate(x_test_med, y_test_med, verbose=2))
+    print(model.evaluate(x_val_med, y_val_med, verbose=2))
+
+    plot(history)
+    model.save('model_gru.h5')
 
 
 def model_cnn(x_train_med, y_train_med, x_test_med, y_test_med, x_val_med, y_val_med):
@@ -116,7 +145,7 @@ def model_cnn(x_train_med, y_train_med, x_test_med, y_test_med, x_val_med, y_val
                   loss='sparse_categorical_crossentropy',
                   metrics=['accuracy'])
 
-    history = model.fit(x_train_med, y_train_med, epochs=30, validation_data=(x_val_med, y_val_med))
+    history = model.fit(x_train_med, y_train_med, epochs=20, validation_data=(x_val_med, y_val_med))
 
     print(model.evaluate(x_test_med, y_test_med, verbose=2))
     print(model.evaluate(x_val_med, y_val_med, verbose=2))
@@ -169,7 +198,7 @@ def model_cnn_rnn(x_train_med, y_train_med, x_test_med, y_test_med, x_val_med, y
                   optimizer=opt,
                   metrics=['accuracy'])
 
-    history = model.fit(x_train_med, y_train_med, epochs=30, validation_data=(x_val_med, y_val_med))
+    history = model.fit(x_train_med, y_train_med, epochs=20, validation_data=(x_val_med, y_val_med))
 
     print(model.evaluate(x_test_med, y_test_med, verbose=2))
     print(model.evaluate(x_val_med, y_val_med, verbose=2))
