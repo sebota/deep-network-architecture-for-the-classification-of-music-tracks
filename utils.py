@@ -1,5 +1,7 @@
 import ast
 import os.path
+
+import librosa
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -8,6 +10,8 @@ from pandas.api.types import CategoricalDtype
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 import tensorflow as tf
+
+AUDIO_DIR = 'C:/Users/Sebastian/Desktop/Mgr/fma_small'
 
 
 def shuffle(x_train, y_train):
@@ -183,30 +187,37 @@ def prepare_data_seq_train():
     y_train, y_test, y_val, y_train_med, y_test_med, y_val_med = encode(y_train, y_test, y_val, y_train_med, y_test_med,
                                                                         y_val_med)
 
-    # return x_train_med, y_train_med, x_test_med, y_test_med, x_val_med, y_val_med
-    return x_train, y_train, x_test, y_test, x_val, y_val
+    return x_train_med, y_train_med, x_test_med, y_test_med, x_val_med, y_val_med
+    # return x_train, y_train, x_test, y_test, x_val, y_val
 
 
 def prepare_data_cnn_train():
     x_train, y_train, x_test, y_test, x_val, y_val, x_train_med, y_train_med, x_test_med, y_test_med, x_val_med, y_val_med = load()
     y_train, y_test, y_val, y_train_med, y_test_med, y_val_med = encode(y_train, y_test, y_val, y_train_med, y_test_med,
                                                                         y_val_med)
-    x_train_med, y_train_med, x_test_med, y_test_med, x_val_med, y_val_med = cnn_dim(x_train_med, y_train_med, x_test_med, y_test_med, x_val_med, y_val_med)
-    x_train, y_train, x_test, y_test, x_val, y_val = cnn_dim(x_train, y_train, x_test, y_test, x_val, y_val)
 
-    # return x_train_med, y_train_med, x_test_med, y_test_med, x_val_med, y_val_med
-    return x_train, y_train, x_test, y_test, x_val, y_val
+    x_train_med, y_train_med, x_test_med, y_test_med, x_val_med, y_val_med = cnn_dim(x_train_med, y_train_med,
+                                                                                     x_test_med, y_test_med, x_val_med,
+                                                                                     y_val_med)
+
+    # x_train, y_train, x_test, y_test, x_val, y_val = cnn_dim(x_train, y_train, x_test, y_test, x_val, y_val)
+
+    return x_train_med, y_train_med, x_test_med, y_test_med, x_val_med, y_val_med
+    # return x_train, y_train, x_test, y_test, x_val, y_val
 
 
 def prepare_data_cnn():
     x_train, y_train, x_test, y_test, x_val, y_val, x_train_med, y_train_med, x_test_med, y_test_med, x_val_med, y_val_med = load()
     y_train, y_test, y_val, y_train_med, y_test_med, y_val_med = encode(y_train, y_test, y_val, y_train_med, y_test_med,
                                                                         y_val_med)
-    x_train_med, y_train_med, x_test_med, y_test_med, x_val_med, y_val_med = cnn_dim(x_train_med, y_train_med, x_test_med, y_test_med, x_val_med, y_val_med)
-    x_train, y_train, x_test, y_test, x_val, y_val = cnn_dim(x_train, y_train, x_test, y_test, x_val, y_val)
+    x_train_med, y_train_med, x_test_med, y_test_med, x_val_med, y_val_med = cnn_dim(x_train_med, y_train_med,
+                                                                                     x_test_med, y_test_med, x_val_med,
+                                                                                     y_val_med)
 
-    # return x_test_med, y_test_med
-    return x_test, y_test
+    # x_train, y_train, x_test, y_test, x_val, y_val = cnn_dim(x_train, y_train, x_test, y_test, x_val, y_val)
+
+    return x_test_med, y_test_med
+    # return x_test, y_test
 
 
 def prepare_data_seq():
@@ -214,5 +225,60 @@ def prepare_data_seq():
     y_train, y_test, y_val, y_train_med, y_test_med, y_val_med = encode(y_train, y_test, y_val, y_train_med, y_test_med,
                                                                         y_val_med)
 
-    # return x_test_med, y_test_med
+    return x_test_med, y_test_med
+    # return x_test, y_test
+
+
+def prepare_data_spec_train():
+    dict_genres = {'Electronic': 0, 'Experimental': 1, 'Folk': 2, 'Hip-Hop': 3,
+                   'Instrumental': 4, 'International': 5, 'Pop': 6, 'Rock': 7}
+
+    # reverse_map = {v: k for k, v in dict_genres.items()}
+
+    npzfile = np.load('C:/Users/Sebastian/Desktop/Mgr/fma_spectrogram/shuffled_train.npz')
+    x_train = npzfile['arr_0']
+    y_train = npzfile['arr_1']
+
+    npzfile = np.load('C:/Users/Sebastian/Desktop/Mgr/fma_spectrogram/shuffled_valid.npz')
+    x_valid = npzfile['arr_0']
+    y_valid = npzfile['arr_1']
+
+    return x_train, y_train, x_valid, y_valid
+
+
+def prepare_data_spec():
+    npzfile = np.load('C:/Users/Sebastian/Desktop/Mgr/fma_spectrogram/test_arr.npz')
+    # print(npzfile.files)
+    x_test = npzfile['arr_0']
+    y_test = npzfile['arr_1']
+    # print(X_test.shape, y_test.shape)
     return x_test, y_test
+
+# def get_tids_from_directory(audio_dir):
+#     tids = []
+#     for _, dirnames, files in os.walk(audio_dir):
+#         if not dirnames:
+#             tids.extend(int(file[:-4]) for file in files)
+#     return tids
+#
+#
+# def get_audio_path(audio_dir, track_id):
+#     tid_str = '{:06d}'.format(track_id)
+#     return os.path.join(audio_dir, tid_str[:3], tid_str + '.mp3')
+#
+#
+# def create_spectogram(track_id):
+#     filename = get_audio_path(AUDIO_DIR, track_id)
+#     y, sr = librosa.load(filename)
+#     spect = librosa.feature.melspectrogram(y=y, sr=sr, n_fft=2048, hop_length=1024)
+#     spect = librosa.power_to_db(spect, ref=np.max)
+#     return spect.T
+#
+#
+# def plot_spect(track_id):
+#     spect = create_spectogram(track_id)
+#     print(spect.shape)
+#     plt.figure(figsize=(10, 4))
+#     librosa.display.specshow(spect.T, y_axis='mel', fmax=8000, x_axis='time')
+#     plt.colorbar(format='%+2.0f dB')
+#     plt.show()

@@ -1,4 +1,4 @@
-from utils import prepare_data_seq, prepare_data_cnn
+from utils import prepare_data_seq, prepare_data_cnn, AUDIO_DIR, prepare_data_spec
 import numpy as np
 
 from keras.models import load_model
@@ -64,17 +64,30 @@ def predict_cnn_rnn(x_pred, y_pred):
 
 
 def report(x_pred, y_pred):
-    model = load_model('model_cnn.h5')
-    y_test = model.predict(x_pred)
-    y_test = np.argmax(y_test, axis=1)
+    dict_genres = {'Hip-Hop': 0, 'Pop': 1, 'Folk': 2, 'Rock': 3,
+                   'Experimental': 4, 'International': 5, 'Electronic': 6, 'Instrumental': 7}
+
+    dict_genres_med = {'Hip-Hop': 0, 'Pop': 1, 'Folk': 2, 'Rock': 3, 'Experimental': 4,
+         'International': 5, 'Electronic': 6, 'Instrumental': 7, 'Jazz': 8, 'Spoken': 9,
+         'Country': 10, 'Blues': 11, 'Old-Time / Historic': 12, 'Soul-RnB': 13,
+         'Classical': 14, 'Easy Listening': 15}
+
+    # dict_genres_2 = {'Electronic': 0, 'Experimental': 1, 'Folk': 2, 'Hip-Hop': 3,
+    #                  'Instrumental': 4, 'International': 5, 'Pop': 6, 'Rock': 7}
+
+    model = load_model('model_gru.h5')
+    x_test = model.predict(x_pred)
+    # x_test = np.expand_dims(x_test, axis=-1)
+    y_test = np.argmax(x_test, axis=1)
     y_pred = np.squeeze(y_pred)
 
-    print(y_pred)
-    print(y_test)
-    print(classification_report(y_pred, y_test))
+    # print(y_pred)
+    # print(y_test)
+    print(classification_report(y_pred, y_test, target_names=dict_genres_med.keys()))
     print(accuracy_score(y_pred, y_test))
     mat = confusion_matrix(y_pred, y_test)
-    sns.heatmap(mat.T, square=True, annot=True, fmt='d', cbar=False)
+    sns.heatmap(mat.T, square=True, annot=True, fmt='d', cbar=False, xticklabels=dict_genres_med.keys(),
+                yticklabels=dict_genres_med.keys())
     plt.xlabel('true label')
     plt.ylabel('predicted label')
     plt.show()
@@ -82,8 +95,11 @@ def report(x_pred, y_pred):
 
 # x_test_med_seq, y_test_med_seq = prepare_data_seq()
 x_test_med_cnn, y_test_med_cnn = prepare_data_cnn()
+# x_test_spec, y_test_spec = prepare_data_spec()
 
+# report(x_test_spec, y_test_spec)
 report(x_test_med_cnn, y_test_med_cnn)
+# report(x_test_med_seq, y_test_med_seq)
 
 # predict_cnn(x_test_med_cnn, y_test_med_cnn)
 # predict_cnn_rnn(x_test_med_cnn, y_test_med_cnn)
