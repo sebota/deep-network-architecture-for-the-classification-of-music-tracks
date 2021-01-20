@@ -42,13 +42,13 @@ def model_seq(x_train_med, y_train_med, x_test_med, y_test_med, x_val_med, y_val
 def model_seq_2(x_train_med, y_train_med, x_test_med, y_test_med, x_val_med, y_val_med):
     model = tf.keras.models.Sequential([
         tf.keras.layers.Dense(256, activation='relu'),
-        tf.keras.layers.Dropout(0.4),
+        tf.keras.layers.Dropout(0.1),
         tf.keras.layers.Dense(128, activation='relu'),
-        tf.keras.layers.Dropout(0.4),
+        tf.keras.layers.Dropout(0.1),
         tf.keras.layers.Dense(128, activation='relu'),
-        tf.keras.layers.Dropout(0.4),
+        tf.keras.layers.Dropout(0.1),
         tf.keras.layers.Dense(64, activation='relu'),
-        tf.keras.layers.Dropout(0.4),
+        tf.keras.layers.Dropout(0.1),
         tf.keras.layers.Dense(16, activation='softmax')
     ])
 
@@ -100,7 +100,7 @@ def model_gru(x_train_med, y_train_med, x_test_med, y_test_med, x_val_med, y_val
         tf.keras.layers.GRU(128, kernel_regularizer=regularizers.l2(0.0001), activation='tanh',
                             recurrent_activation='sigmoid', recurrent_dropout=0.0, unroll=False, use_bias=True,
                             input_shape=(273, 1), return_sequences=True),
-        tf.keras.layers.Dropout(0.6),
+        tf.keras.layers.Dropout(0.3),
         # tf.keras.layers.LSTM(128, activation='tanh', recurrent_activation='sigmoid', recurrent_dropout=0.0, unroll=False, use_bias=True),
         # tf.keras.layers.Dropout(0.2),
         tf.keras.layers.Dense(64, kernel_regularizer=regularizers.l2(0.0001), activation='relu'),
@@ -161,7 +161,7 @@ def model_cnn_rnn(x_train_med, y_train_med, x_test_med, y_test_med, x_val_med, y
     filter_length = 5
     conv_filter_count = 56
     # BATCH_SIZE = 32
-    lstm_count = 96
+    lstm_count = 48
     # EPOCH_COUNT = 70
     num_hidden = 64
     l2_regularization = 0.001
@@ -182,7 +182,7 @@ def model_cnn_rnn(x_train_med, y_train_med, x_test_med, y_test_med, x_val_med, y
         layer = tf.keras.layers.MaxPooling1D(2)(layer)
         layer = tf.keras.layers.Dropout(0.4)(layer)
 
-    layer = tf.keras.layers.LSTM(lstm_count, return_sequences=False)(layer)
+    layer = tf.keras.layers.GRU(lstm_count, return_sequences=False)(layer)
     layer = tf.keras.layers.Dropout(0.4)(layer)
 
     layer = tf.keras.layers.Dense(num_hidden, kernel_regularizer=tf.keras.regularizers.l2(l2_regularization),

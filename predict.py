@@ -75,7 +75,7 @@ def report(x_pred, y_pred):
     # dict_genres_2 = {'Electronic': 0, 'Experimental': 1, 'Folk': 2, 'Hip-Hop': 3,
     #                  'Instrumental': 4, 'International': 5, 'Pop': 6, 'Rock': 7}
 
-    model = load_model('model_gru.h5')
+    model = load_model('model_cnn_rnn.h5')
     x_test = model.predict(x_pred)
     # x_test = np.expand_dims(x_test, axis=-1)
     y_test = np.argmax(x_test, axis=1)
