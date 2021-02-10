@@ -94,14 +94,23 @@ def load():
     x_train_med = features.loc[medium & train, ['mfcc', 'chroma_cens', 'spectral_contrast']]
     x_test_med = features.loc[medium & test, ['mfcc', 'chroma_cens', 'spectral_contrast']]
 
+    # x_train = features.loc[small & train, 'mfcc']
+    # x_test = features.loc[small & test, 'mfcc']
+    # x_train_med = features.loc[medium & train, 'mfcc']
+    # x_test_med = features.loc[medium & test, 'mfcc']
+
     x_val = features.loc[small & val, ['mfcc', 'chroma_cens', 'spectral_contrast']]
-    y_val = tracks.loc[small & val, ('track', 'genre_top')]
     x_val_med = features.loc[medium & val, ['mfcc', 'chroma_cens', 'spectral_contrast']]
+
+    # x_val = features.loc[small & val, 'mfcc']
+    # x_val_med = features.loc[medium & val, 'mfcc']
+
+    y_val = tracks.loc[small & val, ('track', 'genre_top')]
     y_val_med = tracks.loc[medium & val, ('track', 'genre_top')]
 
     # print(x_train.info())
-    # print(x_train.shape)
-    # print(y_train.shape)
+    print(x_train.shape)
+    print(y_train.shape)
     # print(x_val.shape)
     # print(y_val.shape)
     # print(features.head())
@@ -170,14 +179,14 @@ def plot(history):
     plt.plot(history.history['val_accuracy'], label='val_accuracy')
     plt.xlabel('Epoch')
     plt.ylabel('Accuracy')
-    plt.legend(loc='lower right')
+    plt.legend(loc='upper left')
     plt.show()
 
     plt.plot(history.history['loss'], label='loss')
     plt.plot(history.history['val_loss'], label='val_loss')
     plt.xlabel('Epoch')
     plt.ylabel('Loss')
-    plt.legend(loc='lower right')
+    plt.legend(loc='upper right')
     plt.show()
 
 
@@ -190,35 +199,6 @@ def prepare_data_seq_train():
     # return x_train, y_train, x_test, y_test, x_val, y_val
 
 
-def prepare_data_cnn_train():
-    x_train, y_train, x_test, y_test, x_val, y_val, x_train_med, y_train_med, x_test_med, y_test_med, x_val_med, y_val_med = load()
-    y_train, y_test, y_val, y_train_med, y_test_med, y_val_med = encode(y_train, y_test, y_val, y_train_med, y_test_med,
-                                                                        y_val_med)
-
-    x_train_med, y_train_med, x_test_med, y_test_med, x_val_med, y_val_med = cnn_dim(x_train_med, y_train_med,
-                                                                                     x_test_med, y_test_med, x_val_med,
-                                                                                     y_val_med)
-
-    # x_train, y_train, x_test, y_test, x_val, y_val = cnn_dim(x_train, y_train, x_test, y_test, x_val, y_val)
-
-    return x_train_med, y_train_med, x_test_med, y_test_med, x_val_med, y_val_med
-    # return x_train, y_train, x_test, y_test, x_val, y_val
-
-
-def prepare_data_cnn():
-    x_train, y_train, x_test, y_test, x_val, y_val, x_train_med, y_train_med, x_test_med, y_test_med, x_val_med, y_val_med = load()
-    y_train, y_test, y_val, y_train_med, y_test_med, y_val_med = encode(y_train, y_test, y_val, y_train_med, y_test_med,
-                                                                        y_val_med)
-    x_train_med, y_train_med, x_test_med, y_test_med, x_val_med, y_val_med = cnn_dim(x_train_med, y_train_med,
-                                                                                     x_test_med, y_test_med, x_val_med,
-                                                                                     y_val_med)
-
-    # x_train, y_train, x_test, y_test, x_val, y_val = cnn_dim(x_train, y_train, x_test, y_test, x_val, y_val)
-
-    return x_test_med, y_test_med
-    # return x_test, y_test
-
-
 def prepare_data_seq():
     x_train, y_train, x_test, y_test, x_val, y_val, x_train_med, y_train_med, x_test_med, y_test_med, x_val_med, y_val_med = load()
     y_train, y_test, y_val, y_train_med, y_test_med, y_val_med = encode(y_train, y_test, y_val, y_train_med, y_test_med,
@@ -228,30 +208,55 @@ def prepare_data_seq():
     # return x_test, y_test
 
 
-def prepare_data_spec_train():
-    dict_genres = {'Electronic': 0, 'Experimental': 1, 'Folk': 2, 'Hip-Hop': 3,
-                   'Instrumental': 4, 'International': 5, 'Pop': 6, 'Rock': 7}
+def prepare_data_cnn_train():
+    x_train, y_train, x_test, y_test, x_val, y_val, x_train_med, y_train_med, x_test_med, y_test_med, x_val_med, y_val_med = load()
+    y_train, y_test, y_val, y_train_med, y_test_med, y_val_med = encode(y_train, y_test, y_val, y_train_med, y_test_med,
+                                                                        y_val_med)
 
-    # reverse_map = {v: k for k, v in dict_genres.items()}
+    # x_train_med, y_train_med, x_test_med, y_test_med, x_val_med, y_val_med = cnn_dim(x_train_med, y_train_med, x_test_med, y_test_med, x_val_med, y_val_med)
 
-    npzfile = np.load('C:/Users/Sebastian/Desktop/Mgr/fma_spectrogram/shuffled_train.npz')
-    x_train = npzfile['arr_0']
-    y_train = npzfile['arr_1']
+    x_train, y_train, x_test, y_test, x_val, y_val = cnn_dim(x_train, y_train, x_test, y_test, x_val, y_val)
 
-    npzfile = np.load('C:/Users/Sebastian/Desktop/Mgr/fma_spectrogram/shuffled_valid.npz')
-    x_valid = npzfile['arr_0']
-    y_valid = npzfile['arr_1']
-
-    return x_train, y_train, x_valid, y_valid
+    # return x_train_med, y_train_med, x_test_med, y_test_med, x_val_med, y_val_med
+    return x_train, y_train, x_test, y_test, x_val, y_val
 
 
-def prepare_data_spec():
-    npzfile = np.load('C:/Users/Sebastian/Desktop/Mgr/fma_spectrogram/test_arr.npz')
-    # print(npzfile.files)
-    x_test = npzfile['arr_0']
-    y_test = npzfile['arr_1']
-    # print(X_test.shape, y_test.shape)
+def prepare_data_cnn():
+    x_train, y_train, x_test, y_test, x_val, y_val, x_train_med, y_train_med, x_test_med, y_test_med, x_val_med, y_val_med = load()
+    y_train, y_test, y_val, y_train_med, y_test_med, y_val_med = encode(y_train, y_test, y_val, y_train_med, y_test_med,
+                                                                        y_val_med)
+    # x_train_med, y_train_med, x_test_med, y_test_med, x_val_med, y_val_med = cnn_dim(x_train_med, y_train_med, x_test_med, y_test_med, x_val_med, y_val_med)
+
+    x_train, y_train, x_test, y_test, x_val, y_val = cnn_dim(x_train, y_train, x_test, y_test, x_val, y_val)
+
+    # return x_test_med, y_test_med
     return x_test, y_test
+
+
+# def prepare_data_spec_train():
+#     dict_genres = {'Electronic': 0, 'Experimental': 1, 'Folk': 2, 'Hip-Hop': 3,
+#                    'Instrumental': 4, 'International': 5, 'Pop': 6, 'Rock': 7}
+#
+#     # reverse_map = {v: k for k, v in dict_genres.items()}
+#
+#     npzfile = np.load('C:/Users/Sebastian/Desktop/Mgr/fma_spectrogram/shuffled_train.npz')
+#     x_train = npzfile['arr_0']
+#     y_train = npzfile['arr_1']
+#
+#     npzfile = np.load('C:/Users/Sebastian/Desktop/Mgr/fma_spectrogram/shuffled_valid.npz')
+#     x_valid = npzfile['arr_0']
+#     y_valid = npzfile['arr_1']
+#
+#     return x_train, y_train, x_valid, y_valid
+#
+#
+# def prepare_data_spec():
+#     npzfile = np.load('C:/Users/Sebastian/Desktop/Mgr/fma_spectrogram/test_arr.npz')
+#     # print(npzfile.files)
+#     x_test = npzfile['arr_0']
+#     y_test = npzfile['arr_1']
+#     # print(X_test.shape, y_test.shape)
+#     return x_test, y_test
 
 # def get_tids_from_directory(audio_dir):
 #     tids = []

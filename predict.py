@@ -1,4 +1,4 @@
-from utils import prepare_data_seq, prepare_data_cnn, AUDIO_DIR, prepare_data_spec
+from utils import prepare_data_seq, prepare_data_cnn, AUDIO_DIR
 import numpy as np
 
 from keras.models import load_model
@@ -75,7 +75,7 @@ def report(x_pred, y_pred):
     # dict_genres_2 = {'Electronic': 0, 'Experimental': 1, 'Folk': 2, 'Hip-Hop': 3,
     #                  'Instrumental': 4, 'International': 5, 'Pop': 6, 'Rock': 7}
 
-    model = load_model('model_cnn_rnn.h5')
+    model = load_model('model_gru_small.h5')
     x_test = model.predict(x_pred)
     # x_test = np.expand_dims(x_test, axis=-1)
     y_test = np.argmax(x_test, axis=1)
@@ -83,11 +83,11 @@ def report(x_pred, y_pred):
 
     # print(y_pred)
     # print(y_test)
-    print(classification_report(y_pred, y_test, target_names=dict_genres_med.keys()))
+    print(classification_report(y_pred, y_test, target_names=dict_genres.keys()))
     print(accuracy_score(y_pred, y_test))
     mat = confusion_matrix(y_pred, y_test)
-    sns.heatmap(mat.T, square=True, annot=True, fmt='d', cbar=False, xticklabels=dict_genres_med.keys(),
-                yticklabels=dict_genres_med.keys())
+    sns.heatmap(mat.T, square=True, annot=True, fmt='d', cbar=False, xticklabels=dict_genres.keys(),
+                yticklabels=dict_genres.keys())
     plt.xlabel('true label')
     plt.ylabel('predicted label')
     plt.show()
@@ -97,9 +97,9 @@ def report(x_pred, y_pred):
 x_test_med_cnn, y_test_med_cnn = prepare_data_cnn()
 # x_test_spec, y_test_spec = prepare_data_spec()
 
-# report(x_test_spec, y_test_spec)
-report(x_test_med_cnn, y_test_med_cnn)
 # report(x_test_med_seq, y_test_med_seq)
+report(x_test_med_cnn, y_test_med_cnn)
+# report(x_test_spec, y_test_spec)
 
 # predict_cnn(x_test_med_cnn, y_test_med_cnn)
 # predict_cnn_rnn(x_test_med_cnn, y_test_med_cnn)
