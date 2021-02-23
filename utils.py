@@ -89,21 +89,56 @@ def load():
     y_train_med = tracks.loc[medium & train, ('track', 'genre_top')]
     y_test_med = tracks.loc[medium & test, ('track', 'genre_top')]
 
-    x_train = features.loc[small & train, ['mfcc', 'chroma_cens', 'spectral_contrast']]
-    x_test = features.loc[small & test, ['mfcc', 'chroma_cens', 'spectral_contrast']]
-    x_train_med = features.loc[medium & train, ['mfcc', 'chroma_cens', 'spectral_contrast']]
-    x_test_med = features.loc[medium & test, ['mfcc', 'chroma_cens', 'spectral_contrast']]
+    # x_train = features.loc[small & train, ['mfcc', 'chroma_cens', 'spectral_contrast']]
+    # x_test = features.loc[small & test, ['mfcc', 'chroma_cens', 'spectral_contrast']]
+    # x_train_med = features.loc[medium & train, ['mfcc', 'chroma_cens', 'spectral_contrast']]
+    # x_test_med = features.loc[medium & test, ['mfcc', 'chroma_cens', 'spectral_contrast']]
+
+    # x_train = features.loc[small & train, ['mfcc', 'chroma_cens', 'spectral_contrast', 'tonnetz']]
+    # x_test = features.loc[small & test, ['mfcc', 'chroma_cens', 'spectral_contrast', 'tonnetz']]
+    # x_train_med = features.loc[medium & train, ['mfcc', 'chroma_cens', 'spectral_contrast', 'tonnetz']]
+    # x_test_med = features.loc[medium & test, ['mfcc', 'chroma_cens', 'spectral_contrast', 'tonnetz']]
+
+    # x_train = features.loc[small & train, ['mfcc', 'chroma_cens', 'tonnetz', 'spectral_contrast', 'spectral_centroid',
+    #                                        'spectral_bandwidth', 'spectral_rolloff', 'rmse', 'zcr']]
+    # x_test = features.loc[
+    #     small & test, ['mfcc', 'chroma_cens', 'tonnetz', 'spectral_contrast', 'spectral_centroid', 'spectral_bandwidth',
+    #                    'spectral_rolloff', 'rmse', 'zcr']]
+    # x_train_med = features.loc[
+    #     medium & train, ['mfcc', 'chroma_cens', 'tonnetz', 'spectral_contrast', 'spectral_centroid',
+    #                      'spectral_bandwidth', 'spectral_rolloff', 'rmse', 'zcr']]
+    # x_test_med = features.loc[
+    #     medium & test, ['mfcc', 'chroma_cens', 'tonnetz', 'spectral_contrast', 'spectral_centroid',
+    #                     'spectral_bandwidth', 'spectral_rolloff', 'rmse', 'zcr']]
 
     # x_train = features.loc[small & train, 'mfcc']
     # x_test = features.loc[small & test, 'mfcc']
     # x_train_med = features.loc[medium & train, 'mfcc']
     # x_test_med = features.loc[medium & test, 'mfcc']
 
-    x_val = features.loc[small & val, ['mfcc', 'chroma_cens', 'spectral_contrast']]
-    x_val_med = features.loc[medium & val, ['mfcc', 'chroma_cens', 'spectral_contrast']]
+    x_train = features.loc[small & train]
+    x_test = features.loc[small & test]
+    x_train_med = features.loc[medium & train]
+    x_test_med = features.loc[medium & test]
+    # ---------------------------------------------------------------------------------
+    # x_val = features.loc[small & val, ['mfcc', 'chroma_cens', 'spectral_contrast']]
+    # x_val_med = features.loc[medium & val, ['mfcc', 'chroma_cens', 'spectral_contrast']]
+
+    # x_val = features.loc[small & val, ['mfcc', 'chroma_cens', 'spectral_contrast', 'tonnetz']]
+    # x_val_med = features.loc[medium & val, ['mfcc', 'chroma_cens', 'spectral_contrast', 'tonnetz']]
+
+    # x_val = features.loc[
+    #     small & val, ['mfcc', 'chroma_cens', 'tonnetz', 'spectral_contrast', 'spectral_centroid', 'spectral_bandwidth',
+    #                   'spectral_rolloff', 'rmse', 'zcr']]
+    # x_val_med = features.loc[
+    #     medium & val, ['mfcc', 'chroma_cens', 'tonnetz', 'spectral_contrast', 'spectral_centroid', 'spectral_bandwidth',
+    #                    'spectral_rolloff', 'rmse', 'zcr']]
 
     # x_val = features.loc[small & val, 'mfcc']
     # x_val_med = features.loc[medium & val, 'mfcc']
+
+    x_val = features.loc[small & val]
+    x_val_med = features.loc[medium & val]
 
     y_val = tracks.loc[small & val, ('track', 'genre_top')]
     y_val_med = tracks.loc[medium & val, ('track', 'genre_top')]
@@ -111,9 +146,11 @@ def load():
     # print(x_train.info())
     print(x_train.shape)
     print(y_train.shape)
+    print(x_train_med.shape)
+    print(y_train_med.shape)
     # print(x_val.shape)
     # print(y_val.shape)
-    # print(features.head())
+    print(features.shape)
 
     return x_train, y_train, x_test, y_test, x_val, y_val, x_train_med, y_train_med, x_test_med, y_test_med, x_val_med, y_val_med
 
@@ -231,7 +268,6 @@ def prepare_data_cnn():
 
     # return x_test_med, y_test_med
     return x_test, y_test
-
 
 # def prepare_data_spec_train():
 #     dict_genres = {'Electronic': 0, 'Experimental': 1, 'Folk': 2, 'Hip-Hop': 3,
