@@ -169,25 +169,43 @@ def model_lstm(x_train_med, y_train_med, x_test_med, y_test_med, x_val_med, y_va
     model.save('model_lstm_small.h5')
 
 
-# 140mfcc, 273, 518all,
+# 140 mfcc, 273, 315, 518 all
 def model_gru(x_train, y_train, x_test, y_test, x_val, y_val):
     model = tf.keras.models.Sequential([
-        tf.keras.layers.GRU(32, activation='tanh', recurrent_activation='sigmoid', recurrent_dropout=0.0, unroll=False,
+        tf.keras.layers.GRU(32, recurrent_activation='sigmoid', recurrent_dropout=0.0, unroll=False,
                             use_bias=True,
                             input_shape=(518, 1), return_sequences=True),
+        tf.keras.layers.BatchNormalization(momentum=0.0),
+        tf.keras.layers.Activation(activation='tanh'),
         tf.keras.layers.Dropout(0.3),
+
         tf.keras.layers.GRU(16, activation='tanh', recurrent_activation='sigmoid', recurrent_dropout=0.0, unroll=False,
                             use_bias=True, return_sequences=True),
+        # tf.keras.layers.BatchNormalization(momentum=0.0),
+        # tf.keras.layers.Activation(activation='tanh'),
         tf.keras.layers.Dropout(0.3),
-        tf.keras.layers.Dense(32, activation='relu'),
+
+        # tf.keras.layers.Dense(32, activation='relu'),
+        # tf.keras.layers.Dense(32, activation=tf.keras.layers.LeakyReLU(alpha=0.3)),
+        tf.keras.layers.Dense(32),
+        tf.keras.layers.BatchNormalization(momentum=0.0),
+        tf.keras.layers.LeakyReLU(alpha=0.3),
         tf.keras.layers.Dropout(0.3),
-        tf.keras.layers.Dense(32, activation='relu'),
+
+        # tf.keras.layers.Dense(32, activation='relu'),
+        # tf.keras.layers.Dense(32, activation=tf.keras.layers.LeakyReLU(alpha=0.3)),
+        tf.keras.layers.Dense(32),
+        tf.keras.layers.BatchNormalization(momentum=0.0),
+        tf.keras.layers.LeakyReLU(alpha=0.3),
         tf.keras.layers.Dropout(0.3),
-        tf.keras.layers.Dense(16, activation='relu'),
+
+        # tf.keras.layers.Dense(16, activation='relu'),
+        tf.keras.layers.Dense(16, activation=tf.keras.layers.LeakyReLU(alpha=0.3)),
+        # tf.keras.layers.Dense(16),
+        # tf.keras.layers.BatchNormalization(momentum=0.0),
+        # tf.keras.layers.LeakyReLU(alpha=0.3),
         tf.keras.layers.Dropout(0.3),
-        # tf.keras.layers.Dense(8, activation='relu'),
-        # tf.keras.layers.Dropout(0.3),
-        # tf.keras.layers.Dropout(0.3),
+
         tf.keras.layers.Flatten(),
         tf.keras.layers.Dense(8, activation='softmax')
     ])
@@ -196,7 +214,7 @@ def model_gru(x_train, y_train, x_test, y_test, x_val, y_val):
                   loss='sparse_categorical_crossentropy',
                   metrics=['accuracy'])
 
-    history = model.fit(x_train, y_train, epochs=40, batch_size=128, validation_data=(x_val, y_val))
+    history = model.fit(x_train, y_train, epochs=70, batch_size=512, validation_data=(x_test, y_test))
 
     print(model.evaluate(x_test, y_test, verbose=2))
     print(model.evaluate(x_val, y_val, verbose=2))

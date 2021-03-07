@@ -93,7 +93,7 @@ def load():
     # x_test = features.loc[small & test, ['mfcc', 'chroma_cens', 'spectral_contrast']]
     # x_train_med = features.loc[medium & train, ['mfcc', 'chroma_cens', 'spectral_contrast']]
     # x_test_med = features.loc[medium & test, ['mfcc', 'chroma_cens', 'spectral_contrast']]
-
+    #
     # x_train = features.loc[small & train, ['mfcc', 'chroma_cens', 'spectral_contrast', 'tonnetz']]
     # x_test = features.loc[small & test, ['mfcc', 'chroma_cens', 'spectral_contrast', 'tonnetz']]
     # x_train_med = features.loc[medium & train, ['mfcc', 'chroma_cens', 'spectral_contrast', 'tonnetz']]
@@ -123,7 +123,7 @@ def load():
     # ---------------------------------------------------------------------------------
     # x_val = features.loc[small & val, ['mfcc', 'chroma_cens', 'spectral_contrast']]
     # x_val_med = features.loc[medium & val, ['mfcc', 'chroma_cens', 'spectral_contrast']]
-
+    #
     # x_val = features.loc[small & val, ['mfcc', 'chroma_cens', 'spectral_contrast', 'tonnetz']]
     # x_val_med = features.loc[medium & val, ['mfcc', 'chroma_cens', 'spectral_contrast', 'tonnetz']]
 

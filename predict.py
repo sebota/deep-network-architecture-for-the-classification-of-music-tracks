@@ -67,10 +67,10 @@ def report(x_pred, y_pred):
     dict_genres = {'Hip-Hop': 0, 'Pop': 1, 'Folk': 2, 'Rock': 3,
                    'Experimental': 4, 'International': 5, 'Electronic': 6, 'Instrumental': 7}
 
-    dict_genres_med = {'Hip-Hop': 0, 'Pop': 1, 'Folk': 2, 'Rock': 3, 'Experimental': 4,
-         'International': 5, 'Electronic': 6, 'Instrumental': 7, 'Jazz': 8, 'Spoken': 9,
-         'Country': 10, 'Blues': 11, 'Old-Time / Historic': 12, 'Soul-RnB': 13,
-         'Classical': 14, 'Easy Listening': 15}
+    # dict_genres_med = {'Hip-Hop': 0, 'Pop': 1, 'Folk': 2, 'Rock': 3, 'Experimental': 4,
+    #      'International': 5, 'Electronic': 6, 'Instrumental': 7, 'Jazz': 8, 'Spoken': 9,
+    #      'Country': 10, 'Blues': 11, 'Old-Time / Historic': 12, 'Soul-RnB': 13,
+    #      'Classical': 14, 'Easy Listening': 15}
 
     # dict_genres_2 = {'Electronic': 0, 'Experimental': 1, 'Folk': 2, 'Hip-Hop': 3,
     #                  'Instrumental': 4, 'International': 5, 'Pop': 6, 'Rock': 7}
