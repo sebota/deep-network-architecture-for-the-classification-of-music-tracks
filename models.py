@@ -212,13 +212,13 @@ def model_gru(x_train, y_train, x_test, y_test, x_val, y_val):
                   loss='sparse_categorical_crossentropy',
                   metrics=['accuracy'])
 
-    history = model.fit(x_train, y_train, epochs=100, batch_size=512, validation_data=(x_test, y_test))
+    history = model.fit(x_train, y_train, epochs=100, batch_size=512, validation_data=(x_val, y_val))
 
     print(model.evaluate(x_test, y_test, verbose=2))
     print(model.evaluate(x_val, y_val, verbose=2))
 
     plot(history)
-    model.save('model_gru_medium.h5')
+    model.save('model_gru_small.h5')
 
     
 def model_cnn(x_train_med, y_train_med, x_test_med, y_test_med, x_val_med, y_val_med):

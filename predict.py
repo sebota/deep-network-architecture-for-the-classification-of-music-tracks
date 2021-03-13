@@ -85,11 +85,11 @@ def report(x_pred, y_pred):
 
 
 # x_test_med_seq, y_test_med_seq = prepare_data_seq()
-x_test_med_cnn, y_test_med_cnn = prepare_data_cnn()
+x_test_cnn, y_test_cnn = prepare_data_cnn()
 # x_test_spec, y_test_spec = prepare_data_spec()
 
 # report(x_test_med_seq, y_test_med_seq)
-report(x_test_med_cnn, y_test_med_cnn)
+report(x_test_cnn, y_test_cnn)
 # report(x_test_spec, y_test_spec)
 
 # predict_cnn(x_test_med_cnn, y_test_med_cnn)
