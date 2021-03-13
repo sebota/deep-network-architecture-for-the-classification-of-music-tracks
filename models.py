@@ -150,6 +150,7 @@ def model_lstm(x_train_med, y_train_med, x_test_med, y_test_med, x_val_med, y_va
     ])
 
     # adam = tf.keras.optimizers.Adam(lr=0.0005)
+    # adam = tf.keras.optimizers.Adam(lr=0.0005)
 
     model.compile(optimizer='adam',
                   loss='sparse_categorical_crossentropy',
@@ -167,11 +168,11 @@ def model_lstm(x_train_med, y_train_med, x_test_med, y_test_med, x_val_med, y_va
 # 140 mfcc, 273, 315, 518 all
 def model_gru(x_train, y_train, x_test, y_test, x_val, y_val):
     model = tf.keras.models.Sequential([
-        tf.keras.layers.GRU(32, recurrent_activation='sigmoid', recurrent_dropout=0.0, unroll=False,
+        tf.keras.layers.GRU(32, activation='tanh', recurrent_activation='sigmoid', recurrent_dropout=0.0, unroll=False,
                             use_bias=True,
                             input_shape=(518, 1), return_sequences=True),
         tf.keras.layers.BatchNormalization(momentum=0.0),
-        tf.keras.layers.Activation(activation='tanh'),
+        # tf.keras.layers.Activation(activation='tanh'),
         tf.keras.layers.Dropout(0.3),
 
         tf.keras.layers.GRU(16, activation='tanh', recurrent_activation='sigmoid', recurrent_dropout=0.0, unroll=False,
@@ -179,6 +180,8 @@ def model_gru(x_train, y_train, x_test, y_test, x_val, y_val):
         # tf.keras.layers.BatchNormalization(momentum=0.0),
         # tf.keras.layers.Activation(activation='tanh'),
         tf.keras.layers.Dropout(0.3),
+
+        # tf.keras.layers.BatchNormalization(momentum=0.0),
 
         # tf.keras.layers.Dense(32, activation='relu'),
         # tf.keras.layers.Dense(32, activation=tf.keras.layers.LeakyReLU(alpha=0.3)),
@@ -202,22 +205,22 @@ def model_gru(x_train, y_train, x_test, y_test, x_val, y_val):
         tf.keras.layers.Dropout(0.3),
 
         tf.keras.layers.Flatten(),
-        tf.keras.layers.Dense(8, activation='softmax')
+        tf.keras.layers.Dense(16, activation='softmax')
     ])
 
     model.compile(optimizer='adam',
                   loss='sparse_categorical_crossentropy',
                   metrics=['accuracy'])
 
-    history = model.fit(x_train, y_train, epochs=70, batch_size=512, validation_data=(x_test, y_test))
+    history = model.fit(x_train, y_train, epochs=100, batch_size=512, validation_data=(x_test, y_test))
 
     print(model.evaluate(x_test, y_test, verbose=2))
     print(model.evaluate(x_val, y_val, verbose=2))
 
     plot(history)
-    model.save('model_gru_small.h5')
+    model.save('model_gru_medium.h5')
 
-
+    
 def model_cnn(x_train_med, y_train_med, x_test_med, y_test_med, x_val_med, y_val_med):
     model = tf.keras.models.Sequential([
         tf.keras.layers.Conv1D(64, 3, activation='relu', input_shape=(273, 1)),
@@ -249,56 +252,3 @@ def model_cnn(x_train_med, y_train_med, x_test_med, y_test_med, x_val_med, y_val
 
     plot(history)
     model.save('model_cnn.h5')
-
-
-def model_cnn_rnn(x_train_med, y_train_med, x_test_med, y_test_med, x_val_med, y_val_med):
-    num_classes = 16
-    n_layers = 3
-    filter_length = 5
-    conv_filter_count = 56
-    # BATCH_SIZE = 32
-    lstm_count = 48
-    # EPOCH_COUNT = 70
-    num_hidden = 64
-    l2_regularization = 0.001
-
-    input_shape = (273, 1)
-    model_input = tf.keras.layers.Input(input_shape, name='input')
-    layer = model_input
-
-    for i in range(n_layers):
-        layer = tf.keras.layers.Conv1D(
-            filters=conv_filter_count,
-            kernel_size=filter_length,
-            kernel_regularizer=tf.keras.regularizers.l2(l2_regularization),
-            name='convolution_' + str(i + 1)
-        )(layer)
-        layer = tf.keras.layers.BatchNormalization(momentum=0.9)(layer)
-        layer = tf.keras.layers.Activation('relu')(layer)
-        layer = tf.keras.layers.MaxPooling1D(2)(layer)
-        layer = tf.keras.layers.Dropout(0.4)(layer)
-
-    layer = tf.keras.layers.GRU(lstm_count, return_sequences=False)(layer)
-    layer = tf.keras.layers.Dropout(0.4)(layer)
-
-    layer = tf.keras.layers.Dense(num_hidden, kernel_regularizer=tf.keras.regularizers.l2(l2_regularization),
-                                  name='dense1')(layer)
-    layer = tf.keras.layers.Dropout(0.4)(layer)
-
-    layer = tf.keras.layers.Dense(num_classes)(layer)
-    layer = tf.keras.layers.Activation('softmax', name='output_realtime')(layer)
-    model_output = layer
-    model = tf.keras.models.Model(model_input, model_output)
-
-    opt = tf.keras.optimizers.Adam(lr=0.001)
-    model.compile(loss='sparse_categorical_crossentropy',
-                  optimizer=opt,
-                  metrics=['accuracy'])
-
-    history = model.fit(x_train_med, y_train_med, epochs=20, validation_data=(x_val_med, y_val_med))
-
-    print(model.evaluate(x_test_med, y_test_med, verbose=2))
-    print(model.evaluate(x_val_med, y_val_med, verbose=2))
-
-    plot(history)
-    model.save('model_cnn_rnn.h5')

@@ -54,15 +54,6 @@ def predict_cnn(x_pred, y_pred):
     print(counter / 2573)
 
 
-def predict_cnn_rnn(x_pred, y_pred):
-    model = load_model('model_cnn_rnn.h5')
-    counter = 0
-    for i in range(2573):
-        if y_pred[i, :] == np.argmax(model.predict(x_pred[i:i + 1, :])):
-            counter += 1
-    print(counter / 2573)
-
-
 def report(x_pred, y_pred):
     dict_genres = {'Hip-Hop': 0, 'Pop': 1, 'Folk': 2, 'Rock': 3,
                    'Experimental': 4, 'International': 5, 'Electronic': 6, 'Instrumental': 7}
